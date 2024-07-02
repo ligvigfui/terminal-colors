@@ -7,30 +7,42 @@ pub struct ColoredString {
 }
 
 #[macro_export]
-macro_rules! Color {
+macro_rules! color {
     () => {
-        ColoredString::new("")
+        ColoredString::new()
     };
     ($input:expr) => {
-        ColoredString::new_string(format!("{}", $input))
+        ColoredString::from(format!("{}", $input))
     };
     ($($arg:tt)*) => {{
         let res = std::fmt::format(format_args!($($arg)*));
-        ColoredString::new_string(res)
+        ColoredString::from(res)
     }};
 }
 
-impl ColoredString {
-    pub fn new(text: &str) -> ColoredString {
+impl From<&str> for ColoredString {
+    fn from(text: &str) -> ColoredString {
         ColoredString {
             format: Format::new(),
             text: text.to_string(),
         }
     }
-    pub fn new_string(text: String) -> ColoredString {
+}
+
+impl From<String> for ColoredString {
+    fn from(text: String) -> ColoredString {
         ColoredString {
             format: Format::new(),
             text,
+        }
+    }
+}
+
+impl ColoredString {
+    pub fn new() -> ColoredString {
+        ColoredString {
+            format: Format::new(),
+            text: String::new(),
         }
     }
     pub fn foreground(mut self, color: &Color) -> ColoredString {
@@ -92,27 +104,27 @@ mod tests {
 
     #[test]
     fn display() {
-        let colored = ColoredString::new("Hello").foreground(&Color::Red);
+        let colored = ColoredString::from("Hello").foreground(&Color::Red);
         assert_eq!(format!("{}", colored), "\x1B[31mHello\x1B[0m");
     }
 
     #[test]
     fn push_colored() {
         let mut string = String::new();
-        let colored = Color!("Hello").foreground(&Color::Red);
+        let colored = color!("Hello").foreground(&Color::Red);
         string.push_colored(colored);
         assert_eq!(string, "\x1B[31mHello\x1B[0m");
     }
 
     #[test]
     fn expression() {
-        let colored = Color!(2*4).foreground(&Color::Red);
+        let colored = color!(2*4).foreground(&Color::Red);
         assert_eq!(format!("{}", colored), "\x1B[31m8\x1B[0m");
     }
 
     #[test]
     fn complex_colored() {
-        let colored = Color!("Hello {}", 1).foreground(&Color::Red);
+        let colored = color!("Hello {}", 1).foreground(&Color::Red);
         assert_eq!(format!("{}", colored), "\x1B[31mHello 1\x1B[0m");
     }
 }
