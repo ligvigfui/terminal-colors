@@ -9,3 +9,7 @@ pub use colored_strings::*;
 pub use format::*;
 pub use rgb::*;
 pub use u8_color::*;
+
+pub fn clear() {
+    print!("\x1B[2J");
+}

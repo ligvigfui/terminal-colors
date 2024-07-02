@@ -38,6 +38,15 @@ impl From<String> for ColoredString {
     }
 }
 
+impl From<&String> for ColoredString {
+    fn from(text: &String) -> ColoredString {
+        ColoredString {
+            format: Format::new(),
+            text: text.clone(),
+        }
+    }
+}
+
 impl ColoredString {
     pub fn new() -> ColoredString {
         ColoredString {
