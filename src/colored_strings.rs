@@ -63,7 +63,7 @@ impl ColoredString {
     }
 }
 
-pub(crate) trait PushColoredString {
+pub trait PushColoredString {
     fn push_colored(&mut self, colored: ColoredString);
 }
 
