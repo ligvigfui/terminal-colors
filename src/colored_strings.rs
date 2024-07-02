@@ -82,6 +82,18 @@ impl ColoredString {
         self.format.hidden = Some(hidden);
         self
     }
+    pub fn print(&self) {
+        print!("{}", self);
+    }
+    pub fn println(&self) {
+        println!("{}", self);
+    }
+    pub fn eprint(&self) {
+        eprint!("{}", self);
+    }
+    pub fn eprintln(&self) {
+        eprintln!("{}", self);
+    }    
 }
 
 pub trait PushColoredString {
